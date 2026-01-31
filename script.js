@@ -76,10 +76,8 @@ async function searchVideo() {
         const btn = document.createElement("button");
         btn.className = "option-btn resolution-btn" + (i === 0 ? " active" : "");
         btn.dataset.formatId = f.format_id;
-
-        const sizeMb = f.filesize ? (f.filesize / 1024 / 1024).toFixed(1) : "—";
-        btn.textContent = `${f.height}p (${sizeMb} MB)`;
-
+        btn.textContent = `${f.height}p`;
+        if (f.filesize) btn.textContent += ` (${(f.filesize / 1024 / 1024).toFixed(1)} MB)`;
         resolutionOptions.appendChild(btn);
       });
     }
