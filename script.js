@@ -186,7 +186,6 @@ function startDownload() {
       } finally {
         setTimeout(() => {
           showDownloadProgress(false);
-          lockUI(false);
           location.reload();
         }, 1000);
       }
