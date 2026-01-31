@@ -396,11 +396,3 @@ input[type="text"]::placeholder {
         padding: 24px;
     }
 }
-
-.progress-stats {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 5px;
-    font-size: 14px;
-    color: #333;
-}

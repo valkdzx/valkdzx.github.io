@@ -173,21 +173,6 @@ function startDownload() {
       if (msg.type === "progress") {
         progressFill.style.width = msg.percent + "%";
         progressPercent.textContent = Math.round(msg.percent) + "%";
-
-        if (msg.filesize) {
-            filesizeText.textContent = `Размер: ${msg.filesize.toFixed(2)} MB`;
-        }
-
-        if (msg.speed) {
-            speedText.textContent = `Скорость: ${msg.speed.toFixed(2)} MB/s`;
-        }
-
-        if (msg.eta) {
-            let minutes = Math.floor(msg.eta / 60);
-            let seconds = msg.eta % 60;
-            etaText.textContent = `Осталось: ${minutes}:${seconds.toString().padStart(2,'0')}`;
-        }
-        progressText.textContent = "Скачивание...";
       } else if (msg.type === "ready") {
         progressText.textContent = "Начало скачивания...";
         const downloadUrl = `${API_URL}/download/${encodeURIComponent(msg.filename)}?token=${sessionToken}`;
@@ -240,13 +225,9 @@ function showDownloadProgress(show) {
     progressFill.style.width = "0%";
     progressPercent.textContent = "0%";
     progressText.textContent = "Скачивание...";
-    filesizeText.textContent = "Размер: 0 MB";
-    speedText.textContent = "Скорость: 0 MB/s";
-    etaText.textContent = "Осталось: 0:00";
     downloadBtn.disabled = false;
   }
 }
-
 
 function showError(msg) {
   errorDiv.textContent = msg;
