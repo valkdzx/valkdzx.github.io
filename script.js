@@ -134,10 +134,11 @@ function startDownload() {
     currentWs = new WebSocket(`${WS_URL}?token=${sessionToken}`);
 
     currentWs.onopen = () => {
+        // Отправляем сразу данные для скачивания
         currentWs.send(JSON.stringify({
             url: videoUrlInput.value.trim(),
             format,
-            format_id,
+            format_id
         }));
         showDownloadProgress(true);
     };
@@ -148,7 +149,8 @@ function startDownload() {
         if (msg.type === "progress") {
             progressFill.style.width = msg.percent + "%";
             progressPercent.textContent = Math.round(msg.percent) + "%";
-        } else if (msg.type === "ready") {
+        } 
+        else if (msg.type === "ready") {
             progressText.textContent = "Файл готов, скачиваем...";
 
             const downloadUrl = `${API_URL}/download/${encodeURIComponent(msg.filename)}?token=${sessionToken}`;
@@ -161,27 +163,31 @@ function startDownload() {
             document.body.removeChild(a);
 
             if (currentWs.readyState === WebSocket.OPEN) {
-                currentWs.send(JSON.stringify({ type: "download_started" }));
+                currentWs.send(JSON.stringify({ type: "download_completed" }));
             }
 
             progressText.textContent = "Готово!";
             setTimeout(() => {
                 showDownloadProgress(false);
-                location.reload();
+                lockUI(false);
             }, 1000);
-        } else if (msg.type === "error") {
+        } 
+        else if (msg.type === "error") {
             showError(msg.message);
             if (currentWs.readyState === WebSocket.OPEN) {
                 currentWs.send(JSON.stringify({ type: "download_error", message: msg.message }));
             }
             showDownloadProgress(false);
+            lockUI(false);
         }
     };
 
     currentWs.onclose = currentWs.onerror = () => {
         showDownloadProgress(false);
+        lockUI(false);
     };
 }
+
 
 function showLoading(show) {
     loadingSection.classList.toggle("hidden", !show);
