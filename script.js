@@ -22,6 +22,11 @@ const bitrateOptions = document.getElementById("bitrateOptions");
 const formatOptions = document.getElementById("formatOptions");
 const resolutionGroup = document.getElementById("resolutionGroup");
 const downloadBtn = document.getElementById("downloadBtn");
+const searchBtn = document.getElementById("searchBtn");
+const searchBtnText = searchBtn.querySelector("span");
+
+searchBtn.disabled = true;
+searchBtnText.textContent = "Загрузка...";
 
 async function initSession() {
   try {
@@ -29,6 +34,8 @@ async function initSession() {
     if (!res.ok) throw new Error(await res.text());
     const data = await res.json();
     sessionToken = data.token;
+    searchBtn.disabled = false;
+    searchBtnText.textContent = "Поиск";
   } catch (err) {
     showError("Ошибка инициализации: " + err.message);
   }
