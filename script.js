@@ -177,8 +177,10 @@ function startDownload() {
       } catch (err) {
         showError("Ошибка: " + err.message);
       } finally {
-        showDownloadProgress(false);
-        location.reload();
+        setTimeout(() => {
+          showDownloadProgress(false);
+          location.reload();
+        }, 1000)
       }
     } else if (msg.type === "error") {
       showError(msg.message);
