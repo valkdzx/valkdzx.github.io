@@ -186,7 +186,7 @@ function startDownload() {
       } finally {
         setTimeout(() => {
           showDownloadProgress(false);
-          location.reload();
+          //location.reload();
         }, 1000);
       }
     } else if (msg.type === "error") {
