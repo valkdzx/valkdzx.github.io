@@ -156,39 +156,16 @@ function startDownload() {
       progressFill.style.width = msg.percent + "%";
       progressPercent.textContent = Math.round(msg.percent) + "%";
     } else if (msg.type === "ready") {
-      try {
-        progressText.textContent = "Получение файла...";
+      progressText.textContent = "Начало скачивания...";
 
-        const downloadUrl = `${API_URL}/download/${encodeURIComponent(msg.filename)}?token=${sessionToken}`;
-        const res = await fetch(downloadUrl);
-        if (!res.ok) throw new Error("Ошибка сервера");
+      const downloadUrl = `${API_URL}/download/${encodeURIComponent(msg.filename)}?token=${sessionToken}`;
+      
+      window.location.href = downloadUrl;
 
-        const blob = await res.blob();
-        const blobUrl = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = blobUrl;
-        a.download = msg.filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(blobUrl);
-
-        if (currentWs.readyState === WebSocket.OPEN) {
-          currentWs.send(JSON.stringify({ type: "download_completed" }));
-        }
-
+      setTimeout(() => {
+        showDownloadProgress(false);
         progressText.textContent = "Готово!";
-      } catch (err) {
-        showError("Ошибка скачивания: " + err.message);
-        if (currentWs.readyState === WebSocket.OPEN) {
-          currentWs.send(JSON.stringify({ type: "download_error" }));
-        }
-      } finally {
-        setTimeout(() => {
-          showDownloadProgress(false);
-          //location.reload();
-        }, 1000);
-      }
+      }, 2000);
     } else if (msg.type === "error") {
       showError(msg.message);
       showDownloadProgress(false);
