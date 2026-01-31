@@ -156,37 +156,25 @@ function startDownload() {
       progressFill.style.width = msg.percent + "%";
       progressPercent.textContent = Math.round(msg.percent) + "%";
     } else if (msg.type === "ready") {
-      try {
-          progressText.textContent = "Начало скачивания...";
+      progressText.textContent = "Начало скачивания...";
+      const downloadUrl = `${API_URL}/download/${encodeURIComponent(msg.filename)}?token=${sessionToken}`;
 
-          const downloadUrl = `${API_URL}/download/${encodeURIComponent(msg.filename)}?token=${sessionToken}`;
-          
-          const link = document.createElement("a");
-          link.href = downloadUrl;
-          link.style.display = "none";
-          document.body.appendChild(link);
-          
-          link.click();
-          
-          const checkCookie = setInterval(() => {
-            if (document.cookie.includes("download_started")) {
-                clearInterval(checkCookie);
-                
-                document.cookie = "download_started=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                
-                progressText.textContent = "Готово!";
-                
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                    location.reload();
-                }, 500);
-            }
-          }, 200);
-
-      } catch (err) {
-          showError("Ошибка: " + err.message);
-          showDownloadProgress(false);
-      }
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      
+      let countdown = 3;
+      const interval = setInterval(() => {
+          progressText.textContent = `Загрузка запущена. Переход на главную страницу через ${countdown}...`;
+          countdown--;
+          if (countdown < 0) {
+              clearInterval(interval);
+              document.body.removeChild(link);
+              location.reload();
+          }
+      }, 1000);
     } else if (msg.type === "error") {
       showError(msg.message);
       showDownloadProgress(false);
