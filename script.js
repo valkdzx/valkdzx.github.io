@@ -161,7 +161,7 @@ function startDownload() {
             document.body.removeChild(a);
 
             if (currentWs.readyState === WebSocket.OPEN) {
-                currentWs.send(JSON.stringify({ type: "download_completed" }));
+                currentWs.send(JSON.stringify({ type: "download_started" }));
             }
 
             progressText.textContent = "Готово!";
@@ -169,7 +169,6 @@ function startDownload() {
                 showDownloadProgress(false);
                 location.reload();
             }, 1000);
-
         } else if (msg.type === "error") {
             showError(msg.message);
             if (currentWs.readyState === WebSocket.OPEN) {
