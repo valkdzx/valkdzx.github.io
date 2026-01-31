@@ -130,6 +130,7 @@ function startDownload() {
   if (!videoData || !sessionToken) return;
 
   lockUI(true);
+  showDownloadProgress(true);
 
   const format = formatOptions.querySelector(".format-btn.active").dataset.format;
   let format_id = null;
@@ -138,52 +139,70 @@ function startDownload() {
     if (activeQuality) format_id = activeQuality.dataset.formatId;
   }
 
-  currentWs = new WebSocket(`${WS_URL}?token=${sessionToken}`);
+  let attempts = 0;
+  const maxAttempts = 3;
 
-  currentWs.onopen = () => {
-    currentWs.send(JSON.stringify({
-      url: videoUrlInput.value.trim(),
-      format,
-      format_id,
-    }));
-    showDownloadProgress(true);
-  };
+  function connectWebSocket() {
+    attempts++;
+    progressText.textContent = `Соединение с сервером... (попытка ${attempts}/${maxAttempts})`;
+    
+    currentWs = new WebSocket(`${WS_URL}?token=${sessionToken}`);
 
-  currentWs.onmessage = async (event) => {
-    const msg = JSON.parse(event.data);
+    currentWs.onopen = () => {
+      progressText.textContent = "Соединение установлено, начало скачивания...";
+      currentWs.send(JSON.stringify({
+        url: videoUrlInput.value.trim(),
+        format,
+        format_id,
+      }));
+    };
 
-    if (msg.type === "progress") {
-      progressFill.style.width = msg.percent + "%";
-      progressPercent.textContent = Math.round(msg.percent) + "%";
-    } else if (msg.type === "ready") {
-      progressText.textContent = "Начало скачивания...";
-      const downloadUrl = `${API_URL}/download/${encodeURIComponent(msg.filename)}?token=${sessionToken}`;
+    currentWs.onmessage = async (event) => {
+      const msg = JSON.parse(event.data);
 
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.style.display = "none";
-      document.body.appendChild(link);
-      link.click();
-      
-      let countdown = 3;
-      const interval = setInterval(() => {
-          progressText.textContent = `Загрузка запущена. Переход на главную страницу через ${countdown}...`;
-          countdown--;
-          if (countdown < 0) {
-              clearInterval(interval);
-              document.body.removeChild(link);
-              location.reload();
-          }
-      }, 1000);
-    } else if (msg.type === "error") {
-      showError(msg.message);
-      showDownloadProgress(false);
-    }
-  };
+      if (msg.type === "progress") {
+        progressFill.style.width = msg.percent + "%";
+        progressPercent.textContent = Math.round(msg.percent) + "%";
+      } else if (msg.type === "ready") {
+        progressText.textContent = "Начало скачивания...";
+        const downloadUrl = `${API_URL}/download/${encodeURIComponent(msg.filename)}?token=${sessionToken}`;
 
-  currentWs.onclose = currentWs.onerror = () => {
-    showDownloadProgress(false);
-  };
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        
+        let countdown = 3;
+        const interval = setInterval(() => {
+            progressText.textContent = `Загрузка запущена. Переход на главную страницу через ${countdown}...`;
+            countdown--;
+            if (countdown < 0) {
+                clearInterval(interval);
+                document.body.removeChild(link);
+                location.reload();
+            }
+        }, 1000);
+      } else if (msg.type === "error") {
+        showError(msg.message);
+        showDownloadProgress(false);
+        lockUI(false);
+      }
+    };
+
+    currentWs.onerror = currentWs.onclose = () => {
+      if (attempts < maxAttempts) {
+        progressText.textContent = `Ошибка соединения, повторная попытка через 1с...`;
+        setTimeout(connectWebSocket, 1000);
+      } else {
+        showError("Не удалось подключиться к серверу. Попробуйте позже.");
+        showDownloadProgress(false);
+        lockUI(false);
+      }
+    };
+  }
+
+  connectWebSocket();
 }
 
 function showLoading(show) {
