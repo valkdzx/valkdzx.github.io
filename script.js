@@ -2,6 +2,7 @@ const API_URL = "https://simpledownloader.giize.com/api";
 const WS_URL   = "wss://simpledownloader.giize.com/api/ws/download";
 
 let sessionToken = null;
+let isDownloading = false;
 let videoData = null;
 let currentWs = null;
 
