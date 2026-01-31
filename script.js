@@ -70,7 +70,6 @@ async function searchVideo() {
         btn.className = "option-btn resolution-btn" + (i === 0 ? " active" : "");
         btn.dataset.formatId = f.format_id;
         btn.textContent = `${f.height}p`;
-        if (f.filesize) btn.textContent += ` (${(f.filesize / 1024 / 1024).toFixed(1)} MB)`;
         resolutionOptions.appendChild(btn);
       });
     }
