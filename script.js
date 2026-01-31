@@ -109,8 +109,26 @@ resolutionOptions.addEventListener("click", (e) => {
   }
 });
 
+function lockUI(lock) {
+  isDownloading = lock;
+
+  downloadBtn.disabled = lock;
+  videoUrlInput.disabled = lock;
+
+  formatOptions
+    .querySelectorAll("button")
+    .forEach(b => b.disabled = lock);
+
+  resolutionOptions
+    .querySelectorAll("button")
+    .forEach(b => b.disabled = lock);
+}
+
 function startDownload() {
+  if (isDownloading) return;
   if (!videoData || !sessionToken) return;
+
+  lockUI(true);
 
   const format = formatOptions.querySelector(".format-btn.active").dataset.format;
   let format_id = null;
@@ -165,7 +183,11 @@ function startDownload() {
           currentWs.send(JSON.stringify({ type: "download_error" }));
         }
       } finally {
-        setTimeout(() => showDownloadProgress(false), 3000);
+        setTimeout(() => {
+          showDownloadProgress(false);
+          lockUI(false);
+          location.reload();
+        }, 1000);
       }
     } else if (msg.type === "error") {
       showError(msg.message);
