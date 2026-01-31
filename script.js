@@ -76,7 +76,6 @@ async function searchVideo() {
     }
 
     bitrateOptions.parentElement.classList.add("hidden");
-
     videoPreview.classList.remove("hidden");
     downloadBtn.disabled = false;
   } catch (err) {
@@ -112,17 +111,11 @@ resolutionOptions.addEventListener("click", (e) => {
 
 function lockUI(lock) {
   isDownloading = lock;
-
   downloadBtn.disabled = lock;
   videoUrlInput.disabled = lock;
 
-  formatOptions
-    .querySelectorAll("button")
-    .forEach(b => b.disabled = lock);
-
-  resolutionOptions
-    .querySelectorAll("button")
-    .forEach(b => b.disabled = lock);
+  formatOptions.querySelectorAll("button").forEach(b => b.disabled = lock);
+  resolutionOptions.querySelectorAll("button").forEach(b => b.disabled = lock);
 }
 
 function startDownload() {
@@ -176,12 +169,12 @@ function startDownload() {
             showDownloadProgress(false);
             location.reload();
         }, 1000);
-    } else if (msg.type === "error") {
+    } 
+    else if (msg.type === "error") {
         showError(msg.message);
         showDownloadProgress(false);
     }
-};
-
+  };
 
   currentWs.onclose = currentWs.onerror = () => {
     showDownloadProgress(false);
