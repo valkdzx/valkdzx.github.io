@@ -1,4 +1,4 @@
-const API_URL = "https://simpledownloader.giize.com";
+const API_URL = "https://simpledownloader.giize.com/api";
 const WS_URL   = "ws://simpledownloader.giize.com/api/ws/download";
 
 let sessionToken = null;
