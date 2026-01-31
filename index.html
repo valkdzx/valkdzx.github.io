@@ -1,1 +1,87 @@
-Hello World!
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Downloader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Simple Downloader</h1>
+            <p class="subtitle">Скачивайте видео в любом качестве</p>
+        </header>
+
+        <div class="search-section">
+            <div class="input-wrapper">
+                <input 
+                    type="text" 
+                    id="videoUrl" 
+                    placeholder="Вставьте ссылку на YouTube видео..."
+                    autocomplete="off"
+                >
+                <button id="searchBtn" onclick="searchVideo()">
+                    <span>Поиск</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="loadingSection" class="loading-section hidden">
+            <div class="loader"></div>
+            <p>Получение информации о видео...</p>
+        </div>
+
+        <div id="downloadProgress" class="download-progress hidden">
+            <div class="progress-info">
+                <p id="progressText">Скачивание...</p>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div id="error" class="error hidden"></div>
+
+        <div id="videoPreview" class="video-preview hidden">
+            <div class="preview-card">
+                <img id="thumbnail" src="" alt="Превью видео">
+                <div class="video-info">
+                    <h2 id="videoTitle"></h2>
+                    <p id="videoAuthor"></p>
+                </div>
+            </div>
+
+            <div id="downloadOptions" class="download-options">
+                <div class="option-group" id="resolutionGroup">
+                    <h3>Качество видео</h3>
+                    <div id="resolutionOptions" class="options-grid"></div>
+                </div>
+
+                <div class="option-group">
+                    <h3>Битрейт аудио</h3>
+                    <div id="bitrateOptions" class="options-grid"></div>
+                </div>
+
+                <div class="option-group">
+                    <h3>Формат файла</h3>
+                    <div id="formatOptions" class="options-grid">
+                        <button class="option-btn format-btn active" data-format="mp4">MP4</button>
+                        <button class="option-btn format-btn" data-format="mp3">MP3</button>
+                    </div>
+                </div>
+
+                <button id="downloadBtn" class="download-button" onclick="startDownload()">
+                    <span>Скачать</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
