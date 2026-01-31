@@ -28,8 +28,8 @@ const filesizeText = document.getElementById("filesizeText");
 const speedText = document.getElementById("speedText");
 const etaText = document.getElementById("etaText");
 
-//searchBtn.disabled = true;
-//searchBtnText.textContent = "Загрузка...";
+searchBtn.disabled = true;
+searchBtnText.textContent = "Загрузка...";
 
 async function initSession() {
   try {
@@ -37,8 +37,8 @@ async function initSession() {
     if (!res.ok) throw new Error(await res.text());
     const data = await res.json();
     sessionToken = data.token;
-    //searchBtn.disabled = false;
-    //searchBtnText.textContent = "Поиск";
+    searchBtn.disabled = false;
+    searchBtnText.textContent = "Поиск";
   } catch (err) {
     showError("Ошибка инициализации: " + err.message);
   }
