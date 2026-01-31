@@ -156,16 +156,31 @@ function startDownload() {
       progressFill.style.width = msg.percent + "%";
       progressPercent.textContent = Math.round(msg.percent) + "%";
     } else if (msg.type === "ready") {
-      progressText.textContent = "Начало скачивания...";
+      try {
+        progressText.textContent = "Начало скачивания...";
 
-      const downloadUrl = `${API_URL}/download/${encodeURIComponent(msg.filename)}?token=${sessionToken}`;
-      
-      window.location.href = downloadUrl;
+        const downloadUrl = `${API_URL}/download/${encodeURIComponent(msg.filename)}?token=${sessionToken}`;
+        
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        
+        link.style.display = "none";
+        document.body.appendChild(link);
+        
+        link.click();
+        
+        setTimeout(() => {
+            document.body.removeChild(link);
+        }, 100);
 
-      setTimeout(() => {
-        showDownloadProgress(false);
-        progressText.textContent = "Готово!";
-      }, 2000);
+        progressText.textContent = "Файл отправлен в загрузки!";
+      } catch (err) {
+        showError("Ошибка: " + err.message);
+      } finally {
+        setTimeout(() => {
+          showDownloadProgress(false);
+        }, 3000);
+      }
     } else if (msg.type === "error") {
       showError(msg.message);
       showDownloadProgress(false);
