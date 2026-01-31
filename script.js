@@ -153,47 +153,35 @@ function startDownload() {
     const msg = JSON.parse(event.data);
 
     if (msg.type === "progress") {
-      progressFill.style.width = msg.percent + "%";
-      progressPercent.textContent = Math.round(msg.percent) + "%";
+        progressFill.style.width = msg.percent + "%";
+        progressPercent.textContent = Math.round(msg.percent) + "%";
     } else if (msg.type === "ready") {
-      try {
-        progressText.textContent = "Получение файла...";
+        progressText.textContent = "Файл готов, скачиваем...";
 
         const downloadUrl = `${API_URL}/download/${encodeURIComponent(msg.filename)}?token=${sessionToken}`;
-        const res = await fetch(downloadUrl);
-        if (!res.ok) throw new Error("Ошибка сервера");
 
-        const blob = await res.blob();
-        const blobUrl = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = blobUrl;
+        a.href = downloadUrl;
         a.download = msg.filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(blobUrl);
 
         if (currentWs.readyState === WebSocket.OPEN) {
-          currentWs.send(JSON.stringify({ type: "download_completed" }));
+            currentWs.send(JSON.stringify({ type: "download_completed" }));
         }
 
         progressText.textContent = "Готово!";
-      } catch (err) {
-        showError("Ошибка скачивания: " + err.message);
-        if (currentWs.readyState === WebSocket.OPEN) {
-          currentWs.send(JSON.stringify({ type: "download_error" }));
-        }
-      } finally {
         setTimeout(() => {
-          showDownloadProgress(false);
-          location.reload();
+            showDownloadProgress(false);
+            location.reload();
         }, 1000);
-      }
     } else if (msg.type === "error") {
-      showError(msg.message);
-      showDownloadProgress(false);
+        showError(msg.message);
+        showDownloadProgress(false);
     }
-  };
+};
+
 
   currentWs.onclose = currentWs.onerror = () => {
     showDownloadProgress(false);
