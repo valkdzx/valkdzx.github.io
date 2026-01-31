@@ -1,5 +1,5 @@
-const API_URL = "http://37.142.178.127:13377";
-const WS_URL   = "ws://37.142.178.127:13377/api/ws/download";
+const API_URL = "https://simpledownloader.giize.com/";
+const WS_URL   = "ws://simpledownloader.giize.com/api/ws/download";
 
 let sessionToken = null;
 let videoData = null;
