@@ -1,5 +1,5 @@
-const API_URL = "https://simpledownloader.giize.com/api";
-const WS_URL   = "wss://simpledownloader.giize.com/api/ws/download";
+const API_URL = "https://simpledownloader.giize.com:13378/api";
+const WS_URL   = "wss://simpledownloader.giize.com:13378/api/ws/download";
 
 let sessionToken = null;
 let isDownloading = false;
