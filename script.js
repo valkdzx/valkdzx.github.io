@@ -238,3 +238,9 @@ function showError(msg) {
 function clearError() {
   errorDiv.classList.add("hidden");
 }
+
+videoUrlInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !videoUrlInput.disabled) {
+        searchVideo();
+    }
+});
