@@ -72,7 +72,7 @@ async function searchVideo() {
     resolutionOptions.innerHTML = "";
     if (videoData.formats && videoData.formats.length > 0) {
       const videoFormats = videoData.formats
-        .filter(f => f.ext === "mp4" && f.height)
+        .filter(f => f.height)
         .sort((a, b) => b.height - a.height);
 
       videoFormats.forEach((f, i) => {
